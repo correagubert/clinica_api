@@ -4,14 +4,31 @@ import { prismaClient } from '../prisma/prisma.js';
 const app = express()
 app.use(express.json())
 
-app.get('/usuarios', async (req, res) => {
-    try {
-        const usuarios = await prismaClient.usuario.findMany();
-        return res.json(usuarios)
+app.get('/usuarios', async (request, response) => {
+  try {
+    const usuarios = await prismaClient.usuario.findMany();
+    return response.json(usuarios)
+  }
+  catch (e) {
+    console.log(e)
+  }
+
+});
+
+app.get("/usuarios/:id", async (request, response) => {
+  try {
+    const usuario = await prismaClient.usuario.findUnique(
+      {where: {
+      id: Number(request.params.id)
+    }})
+    if (usuario == null){
+      return response.json("ID inexistente.")
+    }else{
+      return response.json(usuario)
     }
-    catch (e){
-        console.log(e)
-    }
+  } catch(e) {
+    console.log(e)
+  }
 })
 
-app.listen(3000, () => console.log("API rodando."))
+app.listen(3000, () => console.log("Api rodando"))

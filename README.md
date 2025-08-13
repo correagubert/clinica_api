@@ -1,2 +1,2 @@
-# clinica_api
-Estudo do SENAI.
+# clinic_api
+API for students development clinic project
