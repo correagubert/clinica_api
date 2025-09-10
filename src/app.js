@@ -14,4 +14,4 @@ app.use(pacientesRouter)
 app.use(prontuariosRouter)
 app.use(consultasRouter)
 
-app.listen(3000, () => console.log("Api rodando"))
+app.listen(5000, () => console.log("Api rodando"))
