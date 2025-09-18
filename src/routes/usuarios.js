@@ -1,13 +1,18 @@
+// Path: src/routes/usuarios.js
+
 import { Router } from "express";
-import { usuariosController } from "../controller/Usuarios/UsuariosController.js";
-export const usuariosRouter = Router()
+import {
+  getTodosOsUsuarios,
+  getUsuarioPorId,
+  criarUsuario,
+  atualizarUsuario,
+  deletarUsuario,
+} from "../controller/Usuarios/UsuariosController.js";
 
-usuariosRouter.get('/usuarios', usuariosController.getTodosOsUsuarios);
+export const usuarioRouter = Router();
 
-usuariosRouter.get("/usuarios/:id", usuariosController.getUsuarioPorId);
-
-usuariosRouter.post("/usuarios", usuariosController.criarUsuario);
-
-usuariosRouter.put("/usuarios/:id", usuariosController.atualizarUsuario);
-
-usuariosRouter.delete("/usuarios/:id", usuariosController.deletarUsuario);
+usuarioRouter.get("/usuarios", getTodosOsUsuarios);
+usuarioRouter.get("/usuarios/:id", getUsuarioPorId);
+usuarioRouter.post("/usuarios", criarUsuario);
+usuarioRouter.put("/usuarios/:id", atualizarUsuario);
+usuarioRouter.delete("/usuarios/:id", deletarUsuario);

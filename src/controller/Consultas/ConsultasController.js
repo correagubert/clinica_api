@@ -1,33 +1,41 @@
 import { prismaClient } from "../../../prisma/prisma.js";
 
-class ConsultasController {
+class ConsultaController {
     constructor() { }
-    async getTodasAsConsultas(_, res) {
+
+    async pegarTodasConsultas(req, res) {
+        const { page, limit } = req.query
+        const pageNumber = Number(page)
+        const limitNumber = Number(limit)
         try {
-            const consultas = await prismaClient.consulta.findMany();
-            return response.json(consultas)
+            const consultas = await prismaClient.consulta.findMany(
+                {
+                    skip: (pageNumber - 1) * limitNumber,
+                    take: limitNumber,
+                });
+            return res.json(consultas)
         }
         catch (e) {
             console.log(e)
         }
     }
 
-    async getConsultaPorId(_, res) {
+    async pegarConsultaPorId(req, res) {
         try {
             const consultas = await prismaClient.consulta.findUnique({
                 where: {
-                    id: Number(request.params.id)
+                    id: Number(req.params.id)
                 }
             })
-            if (!consultas) return response.status(404).send("Consulta não existe!")
-            return response.json(consultas)
+            if (!consultas) return res.status(404).send("Consulta não existe!")
+            return res.json(consultas)
         }
         catch (e) {
             console.log(e)
         }
     }
 
-    async criarConsulta(_, res) {
+    async criarConsulta(req, res) {
         try {
             const { body } = req
             const bodyKeys = Object.keys(body)
@@ -36,14 +44,13 @@ class ConsultasController {
                     key !== "data_consulta" &&
                     key !== "observacoes" &&
                     key !== "medico_responsavel_id" &&
-                    key !== "paciente_id" &&
-                    key !== "paciente"
+                    key !== "paciente_id"
                 ) return res.status(404).send("Colunas não existentes")
             }
             const consultas = await prismaClient.consulta.create({
                 data: {
                     ...body,
-                    data_consulta: new Date(body.data_consulta)
+                    data_consulta: new Date(body.data_consulta) // corrigir esse cara no put quando nao se manda ele... TO-DO
                 },
             })
             return res.status(201).json(consultas)
@@ -52,7 +59,7 @@ class ConsultasController {
         }
     }
 
-    async atualizarConsulta(_, res) {
+    async atualizarConsulta(req, res) {
         try {
             const { body, params } = req
             const bodyKeys = Object.keys(body)
@@ -61,8 +68,7 @@ class ConsultasController {
                     key !== "data_consulta" &&
                     key !== "observacoes" &&
                     key !== "medico_responsavel_id" &&
-                    key !== "paciente_id" &&
-                    key !== "paciente"
+                    key !== "paciente_id"
                 ) return res.status(404).send("Colunas não existentes")
             }
             await prismaClient.consulta.update({
@@ -71,46 +77,43 @@ class ConsultasController {
                     ...body
                 },
             })
-            const consultaAtualizada = await prismaClient.consulta.findUnique({
+            const consultaAtualizado = await prismaClient.consulta.findUnique({
                 where: {
                     id: Number(params.id)
                 }
             })
 
             return res.status(201).json({
-                message: "Consulta atualizada!",
-                data: consultaAtualizada
+                message: "Consulta atualizado!",
+                data: consultaAtualizado
             })
 
         } catch (error) {
             if (error.code == "P2025") {
-                res.status(404).send("Usuário não existe no banco")
+                res.status(404).send("Consulta não existe no banco")
             }
 
-            if (error.code === "P2002") {
-                res.status(404).send("Falha ao cadastrar usuário: Email já cadastrado!")
-            }
         }
     }
 
-    async deletarConsulta(_, res) {
+    async deletarConsulta(req, res) {
         const { params } = req
         try {
-            const consultaDeletada = await prismaClient.consulta.delete({
+            const consultaDeletado = await prismaClient.consulta.delete({
                 where: {
                     id: Number(params.id),
                 },
             })
             res.status(200).json({
-                message: "Consulta deletada!",
-                data: consultaDeletada
+                message: "Consulta deletado!",
+                data: consultaDeletado
             })
         } catch (error) {
             if (error.code == "P2025") {
-                res.status(404).send("Paciente não existe no banco")
+                res.status(404).send("Consulta não existe no banco")
             }
         }
     }
 }
 
-export const consultasController = new ConsultasController();
+export const consultaController = new ConsultaController(0)

@@ -1,13 +1,10 @@
 import { Router } from "express";
-import { consultasController } from "../controller/Consultas/ConsultasController.js";
-export const consultasRouter = Router()
+import { consultaController } from "../controller/Consultas/ConsultasController.js";
 
-consultasRouter.get('/consultas', consultasController.getTodasAsConsultas);
+export const consultasRouter = Router();
 
-consultasRouter.get("/consultas/:id", consultasController.getConsultaPorId);
-
-consultasRouter.post("/consultas", consultasController.criarConsulta);
-
-consultasRouter.put("/consultas/:id", consultasController.atualizarConsulta);
-
-consultasRouter.delete("/consultas/:id", consultasController.deletarConsulta);
+consultasRouter.get("/consultas", consultaController.pegarTodasConsultas)
+consultasRouter.get("/consultas/:id", consultaController.pegarConsultaPorId)
+consultasRouter.post("/consultas", consultaController.criarConsulta)
+consultasRouter.put("/consultas", consultaController.atualizarConsulta)
+consultasRouter.delete("/consultas/:id", consultaController.deletarConsulta)

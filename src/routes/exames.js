@@ -1,13 +1,10 @@
 import { Router } from "express";
-import { examesController } from "../controller/Exames/ExamesController.js";
-export const examesRouter = Router()
+import { exameController } from "../controller/Exames/ExamesController.js";
 
-examesRouter.get('/exames', examesController.getTodosOsExames);
+export const exameRouter = Router()
 
-examesRouter.get("/exames/:id", examesController.getExamePorId);
-
-examesRouter.post("/exames", examesController.criarExame);
-
-examesRouter.put("/exames/:id", examesController.atualizarExame);
-
-examesRouter.delete("/exames/:id", examesController.deletarExame);
+exameRouter.get("/exames", exameController.pegarTodosExames)
+exameRouter.get("/exames/:id", exameController.pegarExamePorId)
+exameRouter.post("/exames", exameController.criarExame)
+exameRouter.put("/exames/:id", exameController.atualizarExame)
+exameRouter.delete("/exames/:id", exameController.deletarExame)

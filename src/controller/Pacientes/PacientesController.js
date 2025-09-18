@@ -1,126 +1,133 @@
 import { prismaClient } from "../../../prisma/prisma.js";
 
-class PacientesController{
-    constructor(){}
-    async getTodosOsPacientes(_, res) {
+class PacienteController {
+    constructor() { }
+    async pegarTodosPacientes(req, res) {
+        const { page, limit } = req.query
+        const pageNumber = Number(page)
+        const limitNumber = Number(limit)
+        console.log("cheguei aqui")
         try {
-            const pacientes = await prismaClient.paciente.findMany();
-            return response.json(pacientes)
-          }
-          catch (e) {
+            const pacientes = await prismaClient.paciente.findMany(
+                {
+                    skip: (pageNumber - 1) * limitNumber,
+                    take: limitNumber,
+                });
+            return res.json(pacientes)
+        }
+        catch (e) {
             console.log(e)
-          }
+        }
     }
 
-    async getPacientePorId(_, res) {
+    async pegarPacientePorId(req, res) {
         try {
             const pacientes = await prismaClient.paciente.findUnique({
-              where: {
-                id: Number(request.params.id)
-              }
+                where: {
+                    id: Number(req.params.id)
+                }
             })
-            if (!pacientes) return response.status(404).send("Paciente não existe!")
-            return response.json(pacientes)
-          }
-          catch (e) {
+            if (!pacientes) return res.status(404).send("Paciente não existe!")
+            return res.json(pacientes)
+        }
+        catch (e) {
             console.log(e)
-          }
+        }
     }
 
-    async criarPaciente(_, res) {
+    async criarPaciente(req, res) {
         try {
             const { body } = req
             const bodyKeys = Object.keys(body) // Aqui pegamos todas as chaves do objeto e é gerado um array de strings para a gente, com o formato de ["chave1", "chave2".....]
             console.log(bodyKeys)
             for (const key of bodyKeys) {
-              if (key !== "nome" &&
-                key !== "cpf" &&
-                key !== "telefone" &&
-                key !== "email" &&
-                key !== "data_nascimento" &&
-                key !== "sexo" &&
-                key !== "responsavel"
-              ) return res.status(404).send("Colunas não existentes")
+                if (key !== "nome" &&
+                    key !== "cpf" &&
+                    key !== "telefone" &&
+                    key !== "email" &&
+                    key !== "data_nascimento" &&
+                    key !== "sexo" &&
+                    key !== "responsavel"
+                ) return res.status(404).send("Colunas não existentes")
             }
             const pacientes = await prismaClient.paciente.create({
-              data: {
-                ...body,
-                data_nascimento: new Date(body.data_nascimento),
-              },
+                data: {
+                    ...body,
+                    data_nascimento: new Date(body.data_nascimento),
+                },
             })
             return res.status(201).json(pacientes)
-          } catch (error) {
+        } catch (error) {
             console.error(error)
             if (error.code === "P2002") {
-              res.status(404).send("Falha ao cadastrar paciente: Email já cadastrado!")
+                res.status(404).send("Falha ao cadastrar paciente: Email já cadastrado!")
             }
-          }
+        }
     }
 
-    async atualizarPaciente(_, res) {
+    async atualizarPaciente(req, res) {
         try {
             const { body, params } = req
             const bodyKeys = Object.keys(body)
             for (const key of bodyKeys) {
-              if (key !== "nome" &&
-                key !== "cpf" &&
-                key !== "telefone" &&
-                key !== "email" &&
-                key !== "data_nascimento" &&
-                key !== "sexo" &&
-                key !== "responsavel"
-              ) return res.status(404).send("Colunas não existentes")
+                if (key !== "nome" &&
+                    key !== "cpf" &&
+                    key !== "telefone" &&
+                    key !== "email" &&
+                    key !== "data_nascimento" &&
+                    key !== "sexo" &&
+                    key !== "responsavel"
+                ) return res.status(404).send("Colunas não existentes")
             }
             await prismaClient.paciente.update({
-              where: { id: Number(params.id) },
-              data: {
-                ...body
-              },
+                where: { id: Number(params.id) },
+                data: {
+                    ...body
+                },
             })
             const pacienteAtualizado = await prismaClient.paciente.findUnique({
-              where: {
-                id: Number(params.id)
-              }
+                where: {
+                    id: Number(params.id)
+                }
             })
-        
+
             return res.status(201).json({
-              message: "Paciente atualizado!",
-              data: pacienteAtualizado
+                message: "Paciente atualizado!",
+                data: pacienteAtualizado
             })
-        
-          } catch (error) {
+
+        } catch (error) {
             if (error.code == "P2025") {
-              res.status(404).send("Usuário não existe no banco")
+                res.status(404).send("Usuário não existe no banco")
             }
             if (error.code === "P2002") {
-              res.status(404).send("Falha ao cadastrar usuário: Email já cadastrado!")
+                res.status(404).send("Falha ao cadastrar usuário: Email já cadastrado!")
             }
-          }
+        }
     }
 
-    async deletarPaciente(_, res) {
+    async deletePaciente(req, res) {
         const { params } = req
         try {
             const pacienteDeletado = await prismaClient.paciente.delete({
-              where: {
-                id: Number(params.id),
-              },
+                where: {
+                    id: Number(params.id),
+                },
             })
             res.status(200).json({
-              message: "Paciente deletado!",
-              data: pacienteDeletado
+                message: "Paciente deletado!",
+                data: pacienteDeletado
             })
-          } catch (error) {
+        } catch (error) {
             if (error.code == "P2025") {
-              res.status(404).send("Paciente não existe no banco")
+                res.status(404).send("Paciente não existe no banco")
             }
             if (error.code == "P2003") {
-              res.status(404).send("Paciente não pode ser excluido, pois possui exames vinculados.")
+                res.status(404).send("Paciente não pode ser excluido, pois possui exames vinculados.")
             }
             res.status(500).send(error)
-          }
+        }
     }
 }
 
-
-export const pacientesController = new PacientesController();
+export const pacienteController = new PacienteController()

@@ -1,17 +1,31 @@
-import express from 'express';
-import { usuariosRouter } from './routes/usuarios.js';
-import { examesRouter } from './routes/exames.js';
-import { pacientesRouter } from './routes/pacientes.js';
-import { prontuariosRouter } from './routes/prontuarios.js';
-import { consultasRouter } from './routes/consultas.js';
+// Path: src/app.js
 
-const app = express()
-app.use(express.json())
+import express from "express";
+import cors from "cors";
 
-app.use(usuariosRouter)
-app.use(examesRouter)
-app.use(pacientesRouter)
-app.use(prontuariosRouter)
-app.use(consultasRouter)
+import { usuarioRouter } from "./routes/usuarios.js";
+import { pacientesRouter } from "./routes/pacientes.js";
+import { consultasRouter } from "./routes/consultas.js";
+import { prontuarioRouter } from "./routes/prontuarios.js";
+import { exameRouter } from "./routes/exames.js";
 
-app.listen(5000, () => console.log("Api rodando"))
+const app = express();
+
+// Middlewares globais
+app.use(cors()); 
+app.use(express.json());
+
+app.get("/ping", (req, res) => {
+  console.log(" GET /ping chegou");
+  res.send("pong");
+});
+
+// Rotas
+app.use(usuarioRouter);
+app.use(exameRouter);
+app.use(pacientesRouter);
+app.use(prontuarioRouter);
+app.use(consultasRouter);
+
+const port = 3000;
+app.listen(port, () => console.log(`Api rodando na porta ${port}`));

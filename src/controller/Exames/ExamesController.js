@@ -1,33 +1,41 @@
-import { prismaClient } from "../../../prisma/prisma.js";
+import { prismaClient } from '../../../prisma/prisma.js';
 
-class ExamesController {
+class ExameController {
     constructor() { }
-    async getTodosOsExames(_, res) {
+
+    async pegarTodosExames(req, res) {
+        const { page, limit } = req.query
+        const pageNumber = Number(page)
+        const limitNumber = Number(limit)
         try {
-            const exames = await prismaClient.exame.findMany();
-            return response.json(exames)
+            const exames = await prismaClient.exame.findMany(
+                {
+                    skip: (pageNumber - 1) * limitNumber,
+                    take: limitNumber,
+                });
+            return res.json(exames)
         }
         catch (e) {
             console.log(e)
         }
     }
 
-    async getExamePorId(_, res) {
+    async pegarExamePorId(req, res) {
         try {
             const exames = await prismaClient.exame.findUnique({
                 where: {
-                    id: Number(request.params.id)
+                    id: Number(req.params.id)
                 }
             })
-            if (!exames) return response.status(404).send("Exame não existe!")
-            return response.json(exames)
+            if (!exames) return res.status(404).send("Exame não existe!")
+            return res.json(exames)
         }
         catch (e) {
             console.log(e)
         }
     }
 
-    async criarExame(_, res) {
+    async criarExame(req, res) {
         try {
             const { body } = req
             const bodyKeys = Object.keys(body)
@@ -43,19 +51,16 @@ class ExamesController {
             const exames = await prismaClient.exame.create({
                 data: {
                     ...body,
-                    data_exame: new Date(body.data_exame)
+                    data_exame: new Date(body.data_exame) // corrigir esse cara no put quando nao se manda ele... TO-DO
                 },
             })
             return res.status(201).json(exames)
         } catch (error) {
             console.error(error)
-            if (error.code === "P2002") {
-                res.status(404).send("Falha ao cadastrar paciente: Email já cadastrado!")
-            }
         }
     }
 
-    async atualizarExame(_, res) {
+    async atualizarExame(req, res) {
         try {
             const { body, params } = req
             const bodyKeys = Object.keys(body)
@@ -81,22 +86,18 @@ class ExamesController {
             })
 
             return res.status(201).json({
-                message: "Paciente atualizado!",
+                message: "Exame atualizado!",
                 data: exameAtualizado
             })
 
         } catch (error) {
             if (error.code == "P2025") {
-                res.status(404).send("Usuário não existe no banco")
-            }
-
-            if (error.code === "P2002") {
-                res.status(404).send("Falha ao cadastrar usuário: Email já cadastrado!")
+                res.status(404).send("Exame não existe no banco")
             }
         }
     }
 
-    async deletarExame(_, res) {
+    async deletarExame(req, res) {
         const { params } = req
         try {
             const exameDeletado = await prismaClient.exame.delete({
@@ -110,10 +111,10 @@ class ExamesController {
             })
         } catch (error) {
             if (error.code == "P2025") {
-                res.status(404).send("Paciente não existe no banco")
+                res.status(404).send("Exame não existe no banco")
             }
         }
     }
 }
 
-export const examesController = new ExamesController();
+export const exameController = new ExameController()

@@ -1,13 +1,11 @@
+// Route
 import { Router } from "express";
-import { prontuariosController } from "../controller/Prontuarios/ProntuariosController.js";
-export const prontuariosRouter = Router()
+import { prontuarioController } from "../controller/Prontuarios/ProntuariosController.js";
+export const prontuarioRouter = Router()
 
-prontuariosRouter.get('/prontuarios', prontuariosController.getTodosOsProntuarios);
 
-prontuariosRouter.get("/prontuarios/:id", prontuariosController.getProntuarioPorId);
-
-prontuariosRouter.post("/prontuarios", prontuariosController.criarProntuario);
-
-prontuariosRouter.put("/prontuarios/:id", prontuariosController.atualizarProntuario);
-
-prontuariosRouter.delete("/prontuarios/:id", prontuariosController.deletarProntuario);
+prontuarioRouter.get("/prontuarios", prontuarioController.pegarTodosProntuario)
+prontuarioRouter.get("/prontuarios/:id", prontuarioController.pegarProntuarioPorID)
+prontuarioRouter.post("/prontuarios", prontuarioController.criarProntuario)
+prontuarioRouter.put("/prontuarios/:id", prontuarioController.atualizarProntuario)
+prontuarioRouter.delete("/prontuarios/:id", prontuarioController.deletarProntuario)
