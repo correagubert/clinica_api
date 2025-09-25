@@ -5,9 +5,9 @@ import cors from "cors";
 
 import { usuarioRouter } from "./routes/usuarios.js";
 import { pacientesRouter } from "./routes/pacientes.js";
-import { consultasRouter } from "./routes/consultas.js";
-import { prontuarioRouter } from "./routes/prontuarios.js";
-import { exameRouter } from "./routes/exames.js";
+import { consultasRouter } from "./routes/consulta.js";
+import { prontuarioRouter } from "./routes/prontuario.js";
+import { exameRouter } from "./routes/exame.js";
 
 const app = express();
 

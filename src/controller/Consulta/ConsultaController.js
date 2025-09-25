@@ -1,3 +1,4 @@
+import { Router } from "express";
 import { prismaClient } from "../../../prisma/prisma.js";
 
 class ConsultaController {
@@ -6,13 +7,14 @@ class ConsultaController {
     async pegarTodasConsultas(req, res) {
         const { page, limit } = req.query
         const pageNumber = Number(page)
-        const limitNumber = Number(limit)
+        const limitNumber= Number(limit)
         try {
             const consultas = await prismaClient.consulta.findMany(
                 {
                     skip: (pageNumber - 1) * limitNumber,
                     take: limitNumber,
-                });
+                }
+            );
             return res.json(consultas)
         }
         catch (e) {

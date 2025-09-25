@@ -1,6 +1,6 @@
 // Route
 import { Router } from "express";
-import { prontuarioController } from "../controller/Prontuarios/ProntuariosController.js";
+import { prontuarioController } from "../controller/Prontuario/ProntuarioController.js";
 export const prontuarioRouter = Router()
 
 

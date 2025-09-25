@@ -7,7 +7,7 @@ import {
   criarUsuario,
   atualizarUsuario,
   deletarUsuario,
-} from "../controller/Usuarios/UsuariosController.js";
+} from "../controller/Usuario/UsuarioController.js";
 
 export const usuarioRouter = Router();
 

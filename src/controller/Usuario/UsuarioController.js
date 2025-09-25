@@ -4,14 +4,8 @@ import { prismaClient } from "../../../prisma/prisma.js";
 
 // GET /usuarios
 export async function getTodosOsUsuarios(req, res) {
-  const { page, limit } = req.query
-  const pageNumber = Number(page)
-  const limitNumber = Number(limit)
   try {
-    const usuarios = await prismaClient.usuario.findMany({
-      skip: (pageNumber - 1) * limitNumber,
-      take: limitNumber,
-  });
+    const usuarios = await prismaClient.usuario.findMany();
     return res.json(usuarios);
   } catch (e) {
     console.error("Erro em getTodosOsUsuarios:", e);

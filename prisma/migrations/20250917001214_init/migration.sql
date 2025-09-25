@@ -37,7 +37,7 @@ CREATE TABLE "public"."paciente" (
     "id" SERIAL NOT NULL,
     "nome" TEXT NOT NULL,
     "cpf" TEXT NOT NULL,
-    "telefone" TEXT NOT NULL,
+    "telefone" BIGINT NOT NULL,
     "email" TEXT NOT NULL,
     "data_nascimento" TIMESTAMP(3) NOT NULL,
     "sexo" TEXT NOT NULL,

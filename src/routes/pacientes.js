@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { pacienteController } from "../controller/Pacientes/PacientesController.js"
+import { pacienteController } from "../controller/Paciente/PacienteController.js"
 
 export const pacientesRouter = Router()
 
