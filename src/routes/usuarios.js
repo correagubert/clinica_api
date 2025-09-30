@@ -1,15 +1,8 @@
 // Path: src/routes/usuarios.js
 
 import { Router } from "express";
-import {
-  getTodosOsUsuarios,
-  getUsuarioPorId,
-  criarUsuario,
-  atualizarUsuario,
-  deletarUsuario,
-} from "../controller/Usuario/UsuarioController.js";
-
-export const usuarioRouter = Router();
+import {getTodosOsUsuarios, getUsuarioPorId, criarUsuario, atualizarUsuario, deletarUsuario} from "../controller/Usuario/UsuarioController.js";
+export const usuarioRouter = Router()
 
 usuarioRouter.get("/usuarios", getTodosOsUsuarios);
 usuarioRouter.get("/usuarios/:id", getUsuarioPorId);
