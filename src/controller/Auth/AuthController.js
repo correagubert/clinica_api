@@ -1,10 +1,10 @@
 import bcrypt from "bcrypt";
-import { prismaClient } from "../../prisma/prisma.ts";
+import { prismaClient } from "../../prisma/prisma.js";
 import {
     signAccessToken,
     signRefreshToken,
     verifyRefresh,
-} from "../utils/jwt.ts";
+} from "../utils/jwt.js";
 
 
 class AuthController {
@@ -29,14 +29,14 @@ class AuthController {
             }
             // Hash da senha com bcrypt
             const saltRounds = 10;
-            const hashedsenha = await bcrypt.hash(senha, saltRounds);
+            const hashedSenha = await bcrypt.hash(senha, saltRounds);
             // Criar usuário no banco de dados
             const usuario = await prismaClient.usuario.create({
-                data: { email, senha: hashedsenha, nome: nome || null },
+                data: { email, senha: hashedSenha, nome: nome || null },
                 select: {
                     id: true,
                     email: true,
-                 nome: true,
+                    nome: true,
                 },
             });
             return res.status(201).json(usuario);
@@ -58,14 +58,14 @@ class AuthController {
             const accessToken = signAccessToken({
                 usuarioId: usuario.id,
                 email: usuario.email,
-             nome: usuario.nome,
+                nome: usuario.nome,
             });
 
             // Gerar refresh token (longa duração)
             const refreshToken = signRefreshToken({
                 usuarioId: usuario.id,
                 email: usuario.email,
-             nome: usuario.nome,
+                nome: usuario.nome,
             });
             // Armazenar refresh token no banco de dados
             const expiresAt = new Date();
@@ -85,7 +85,7 @@ class AuthController {
                 usuario: {
                     id: usuario.id,
                     email: usuario.email,
-                 nome: usuario.nome,
+                    nome: usuario.nome,
                 },
             });
         } catch (error) {
@@ -116,7 +116,7 @@ class AuthController {
     //         const accessToken = signAccessToken({
     //             usuarioId: payload.id,
     //             email: payload.email,
-    //             nome: payload.nome,
+    //             name: payload.name,
     //         });
     //         return res.json({ accessToken });
     //     } catch {
